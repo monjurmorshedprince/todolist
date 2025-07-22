@@ -2,26 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:todoapp/utils/todo_list.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  final _controller = TextEditingController();
   List toDoList = [
-    ['Buy potato', false],
-    ['Walk the dog', false],
-    ['Complete Flutter project', false],
-    ['Read a book', false],
-
-    ['Call mom', false],
-    ['Prepare dinner', false],
-    ['Exercise', false],
-    ['Clean the house', false],
-    ['Pay bills', false],
-
-    ['Plan vacation', false],
+    ['Code ', true],
+    ['Learn Flutter', true],
+    ['Drink Coffee', false],
+    ['Explore Firebase', false],
   ];
 
   void checkBoxChanged(int index) {
@@ -30,15 +23,29 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void saveNewTask() {
+    setState(() {
+      toDoList.add([_controller.text, false]);
+      _controller.clear();
+    });
+  }
+
+  void deleteTask(int index) {
+    setState(() {
+      toDoList.removeAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.deepPurple.shade300,
       appBar: AppBar(
-        elevation: 10.0,
-        leading: Icon(Icons.menu),
-        title: const Text('Simple TODO App'),
         centerTitle: true,
+        leading: const Icon(Icons.menu),
+        forceMaterialTransparency: true,
+        elevation: 20.0,
+        title: const Text('Simple Todo'),
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
       ),
@@ -49,8 +56,41 @@ class _HomePageState extends State<HomePage> {
             taskName: toDoList[index][0],
             taskCompleted: toDoList[index][1],
             onChanged: (value) => checkBoxChanged(index),
+            deleteFunction: (contex) => deleteTask(index),
           );
         },
+      ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Row(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: TextField(
+                  controller: _controller,
+                  decoration: InputDecoration(
+                    hintText: 'Add a new todo items',
+                    filled: true,
+                    fillColor: Colors.deepPurple.shade200,
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.deepPurple),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.deepPurple),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            FloatingActionButton(
+              onPressed: saveNewTask,
+              child: const Icon(Icons.add),
+            ),
+          ],
+        ),
       ),
     );
   }
