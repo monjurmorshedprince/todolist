@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
-import 'HomePage.dart';
+import 'package:provider/provider.dart';
+import 'package:todoapp/models/save_task.dart';
+import 'package:todoapp/utils/add_todo.dart';
+import 'package:todoapp/utils/todo_list.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => SaveTask(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -10,6 +18,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, home: HomePage());
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(brightness: Brightness.dark),
+      initialRoute: '/',
+      routes: {
+        '/': (_) => const TodoList(),
+        '/add-todo-screen': (_) => AddTodo(),
+      },
+    );
   }
 }
